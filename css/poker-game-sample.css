@@ -1,0 +1,360 @@
+:root {
+  --white: white;
+  --black: black;
+}
+
+.w-layout-blockcontainer {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.w-layout-grid {
+  grid-row-gap: 16px;
+  grid-column-gap: 16px;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid;
+}
+
+@media screen and (max-width: 991px) {
+  .w-layout-blockcontainer {
+    max-width: 728px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .w-layout-blockcontainer {
+    max-width: none;
+  }
+}
+
+body {
+  color: #333;
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.heading {
+  text-align: center;
+  background-image: url('../images/スクリーンショット-2024-01-16-160417.png');
+  background-position: 0 0;
+  background-size: cover;
+  font-family: Impact, Haettenschweiler, Franklin Gothic Bold, Charcoal, sans-serif;
+  position: static;
+}
+
+.body {
+  height: 100%;
+  background-image: url('../images/スクリーンショット-2024-01-16-160417.png');
+  background-position: 0 0;
+  background-size: cover;
+}
+
+.heading-1 {
+  text-align: center;
+  margin-top: 400px;
+  font-family: Impact, Haettenschweiler, Franklin Gothic Bold, Charcoal, sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.section {
+  margin-top: 300px;
+}
+
+.text-block {
+  color: #000;
+  text-align: center;
+  mix-blend-mode: normal;
+  margin-top: 300px;
+  font-family: Impact, Haettenschweiler, Franklin Gothic Bold, Charcoal, sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  transform: translate(0);
+}
+
+.link {
+  font-size: 50px;
+  text-decoration: underline;
+}
+
+.link-2 {
+  color: #000;
+  text-align: center;
+  background-image: linear-gradient(#00f 7%, #fff);
+  border: 2px #fff;
+  border-radius: 17px;
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-family: Impact, Haettenschweiler, Franklin Gothic Bold, Charcoal, sans-serif;
+  font-size: 70px;
+  font-style: normal;
+  text-decoration: none;
+  display: inline;
+  position: relative;
+  top: 65px;
+  left: 42.5%;
+}
+
+.select-field {
+  width: 110px;
+  margin-left: 0;
+  margin-right: 5px;
+  display: flex;
+}
+
+.select-field-2 {
+  width: 75px;
+  margin-right: 10px;
+  display: flex;
+}
+
+.form {
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  text-align: center;
+  flex-wrap: wrap;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: row;
+  align-content: flex-start;
+  justify-content: center;
+  align-items: stretch;
+  display: inline-block;
+  position: static;
+}
+
+.select-field-3 {
+  width: 100px;
+}
+
+.select-field-4 {
+  width: 75px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.select-field-5 {
+  width: 100px;
+}
+
+.select-field-6 {
+  width: 75px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.select-field-7 {
+  width: 100px;
+}
+
+.select-field-8 {
+  width: 75px;
+  margin-left: 5px;
+}
+
+.select-field-9 {
+  width: 100px;
+  margin-left: 10px;
+}
+
+.select-field-10 {
+  width: 75px;
+  margin-left: 5px;
+}
+
+.submit-button {
+  display: none;
+}
+
+.form-2 {
+  justify-content: flex-start;
+  align-items: center;
+  display: block;
+}
+
+.container {
+  padding-right: 15px;
+  display: flex;
+}
+
+.suit-1 {
+  width: 120px;
+  color: #fff;
+  background-color: #ff7f7f;
+  border-radius: 8px;
+  margin-right: 5px;
+}
+
+.number1 {
+  width: 65px;
+  color: #fff;
+  background-color: #ff7f7f;
+  border-radius: 8px;
+}
+
+.suit-2 {
+  width: 120px;
+  color: #fff;
+  background-color: #ff7fbf;
+  border-radius: 8px;
+  margin-right: 5px;
+}
+
+.select-field-14 {
+  width: 65px;
+  color: #fff;
+  background-color: #ff7fbf;
+  border-radius: 8px;
+}
+
+.suit-3 {
+  width: 120px;
+  color: #fff;
+  background-color: #ff7fff;
+  border-radius: 8px;
+  margin-right: 5px;
+}
+
+.select-field-16 {
+  width: 65px;
+  color: #fff;
+  background-color: #ff7fff;
+  border-radius: 8px;
+}
+
+.suit-4 {
+  width: 120px;
+  color: #fff;
+  background-color: #bf7fff;
+  border-radius: 8px;
+  margin-right: 5px;
+}
+
+.select-field-18 {
+  width: 65px;
+  color: #fff;
+  background-color: #bf7fff;
+  border-radius: 8px;
+}
+
+.suit-5 {
+  width: 120px;
+  color: #fff;
+  background-color: #7f7fff;
+  border-radius: 8px;
+  margin-right: 5px;
+}
+
+.select-field-20 {
+  width: 65px;
+  color: #fff;
+  background-color: #7f7fff;
+  border-radius: 8px;
+}
+
+.container-2 {
+  margin-top: 10px;
+  margin-left: 10px;
+  display: flex;
+}
+
+.container-3, .container-4, .container-5, .container-6 {
+  margin-right: 10px;
+}
+
+.button {
+  width: 150px;
+  text-align: center;
+  background-color: #0f0;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.field-label {
+  color: #ff7f7f;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.field-label-2 {
+  color: #ff7fbf;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.field-label-3 {
+  color: #ff7fff;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.field-label-4 {
+  color: #bf7fff;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.field-label-5 {
+  color: #7f7fff;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.number2 {
+  width: 65px;
+  color: #fff;
+  background-color: #ff7fbf;
+  border-radius: 8px;
+}
+
+.number3 {
+  width: 65px;
+  color: #fff;
+  background-color: #ff7fff;
+  border-radius: 8px;
+}
+
+.number4 {
+  width: 65px;
+  color: #fff;
+  background-color: #bf7fff;
+  border-radius: 8px;
+}
+
+.number5 {
+  width: 65px;
+  color: #fff;
+  background-color: #7f7fff;
+  border-radius: 8px;
+}
+
+.grid {
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.heading-2 {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.heading-3 {
+  margin-left: 10px;
+}
+
+#w-node-_6fc442a9-78b5-a3cb-44b1-bb835f58e573-e60af7b3, #w-node-_333a605a-b6f2-c565-5f59-b5a00f7a8d35-e60af7b3, #w-node-_16c44e8b-02c7-97b3-a263-577708b4887d-e60af7b3, #w-node-a22088a3-377c-c5cc-8d6a-02f806f83211-e60af7b3, #w-node-_71d98ea8-e20b-a252-3a7f-8be194f0a284-e60af7b3 {
+  grid-area: span 1 / span 1 / span 1 / span 1;
+}
