@@ -69,11 +69,27 @@ class Poker_Hand {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cards = $_POST['cards'] ?? [];
 
+    // POSTでカードが送られてこなかった場合はランダムに生成
+    if (empty($cards)) {
+        $suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        $numbers = range(1, 13); // 1 = A, 11 = J, 12 = Q, 13 = K
+        $deck = [];
+
+        foreach ($suits as $suit) {
+            foreach ($numbers as $number) {
+                $deck[] = ['number' => $number, 'suit' => $suit];
+            }
+        }
+
+        shuffle($deck);
+        $cards = array_slice($deck, 0, 5);
+    }
+
     $poker = new Poker_Hand($cards);
     $poker->judgeHand();
 
     $judge = $poker->getJudge();
     $selectedCards = $poker->getCards();
 
-    include 'index.php'; // index.phpで $judge と $selectedCards を使える
+    include 'index.php'; // ここで$judgeと$selectedCardsを使う
 }
