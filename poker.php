@@ -99,10 +99,20 @@ class Poker_Hand {
     }
 }
 
-// メイン処理
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $cards = $_POST['cards'] ?? [];
+// ========== メイン処理 ==========
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // JSONで送信された場合に対応
+    $raw = file_get_contents("php://input");
+    $json = json_decode($raw, true);
+
+    if (is_array($json) && isset($json['cards'])) {
+        $cards = $json['cards'];
+    } else {
+        $cards = $_POST['cards'] ?? [];
+    }
+
+    // データが空ならランダム配布
     if (empty($cards)) {
         $suits = ['hearts', 'diamonds', 'clubs', 'spades'];
         $numbers = range(1, 13); // 1=A, 11=J, 12=Q, 13=K
@@ -116,13 +126,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cards = array_slice($deck, 0, 5);
     }
 
+    // 判定
     $poker = new Poker_Hand($cards);
     $poker->judgeHand();
     $poker->generateImagePaths();
 
-    $judge = $poker->getJudge();
-    $selectedCards = $poker->getCards();
-    $cardImages = $poker->getImagePaths();
-
-    include 'index.php'; // ここで$judge, $selectedCards, $cardImagesを使う
+    // JSONで返却
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode([
+        "judge" => $poker->getJudge(),
+        "cards" => $poker->getCards(),
+        "images" => $poker->getImagePaths()
+    ]);
+    exit;
 }
