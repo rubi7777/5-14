@@ -4,11 +4,12 @@ class Poker_Hand {
     private $judge = '';
     private $imagePaths = [];
 
+    // HTML <option> の value に合わせたスートマップ
     private $suitMap = [
-        'hearts'   => 'suit1',
-        'spades'   => 'suit4',
-        'clubs'    => 'suit3',
-        'diamonds' => 'suit2'
+        'spade'   => 'spade',
+        'heart'   => 'heart',
+        'diamond' => 'diamond',
+        'club'    => 'club'
     ];
 
     public function __construct(array $cards) {
@@ -87,10 +88,11 @@ class Poker_Hand {
     public function generateImagePaths() {
         $this->imagePaths = [];
         foreach ($this->cards as $card) {
-            if (!isset($this->suitMap[$card['suit']])) continue;
-            $suitKey = $this->suitMap[$card['suit']];
-            $numKey  = 'number' . $card['number'];
-            $this->imagePaths[] = "images/{$suitKey}_{$numKey}.png";
+            $suit = strtolower(trim($card['suit']));
+            $number = $card['number'];
+            if (!isset($this->suitMap[$suit])) continue;
+            $suitFolder = $this->suitMap[$suit];
+            $this->imagePaths[] = "images/{$suitFolder}/{$number}.png";
         }
     }
 
@@ -100,7 +102,7 @@ class Poker_Hand {
 }
 
 // =========================
-// フォームデータの変換（HTMLはそのまま）
+// フォームデータの変換
 $cards = [];
 for ($i = 1; $i <= 5; $i++) {
     $suitKey   = 'suit' . $i;
@@ -117,7 +119,9 @@ $hand = new Poker_Hand($cards);
 $hand->judgeHand();
 $hand->generateImagePaths();
 
+// 結果表示
 echo "<h2>判定結果: {$hand->getJudge()}</h2>";
 
 foreach ($hand->getImagePaths() as $img) {
     echo "<img src='{$img}' alt='card' style='width:80px;margin:5px;'>";
+}
