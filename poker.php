@@ -6,9 +6,9 @@ class Poker_Hand {
 
     private $suitMap = [
         'hearts'   => 'suit1',
-        'diamonds' => 'suit2',
+        'spades'   => 'suit4',
         'clubs'    => 'suit3',
-        'spades'   => 'suit4'
+        'diamonds' => 'suit2'
     ];
 
     public function __construct(array $cards) {
@@ -22,12 +22,11 @@ class Poker_Hand {
     }
 
     public function judgeHand() {
-        // 枚数チェック
         if (count($this->cards) !== 5) {
             $this->judge = '不正判定 (Illegal hand)';
             return;
         }
-        // 同一カード重複チェック
+
         $dupKey = array_map(fn($c) => $c['suit'].'-'.$c['number'], $this->cards);
         if (count($dupKey) !== count(array_unique($dupKey))) {
             $this->judge = '不正判定 (Illegal hand)';
@@ -41,22 +40,18 @@ class Poker_Hand {
         $isFlush    = count(array_unique($suits)) === 1;
         $isStraight = $this->isSequential($numbers);
 
-        // Aを14として再判定
         $numbersAceHigh = array_map(fn($n) => $n === 1 ? 14 : $n, $numbers);
         sort($numbersAceHigh, SORT_NUMERIC);
         $isStraightAceHigh = $this->isSequential($numbersAceHigh);
 
-        // A-2-3-4-5 (ホイール)
         $isWheel = ($numbers === [1,2,3,4,5]);
 
-        // 同じ数字の枚数
         $countMap = array_count_values($numbers);
         $counts   = array_values($countMap);
         rsort($counts, SORT_NUMERIC);
         $maxCnt     = $counts[0] ?? 0;
         $secondCnt  = $counts[1] ?? 0;
 
-        // 役判定
         if ($isFlush && $isStraightAceHigh && $numbersAceHigh === [10,11,12,13,14]) {
             $this->judge = 'ロイヤルストレートフラッシュ (Royal Straight Flush)';
         } elseif ($isFlush && ($isStraight || $isStraightAceHigh || $isWheel)) {
@@ -92,9 +87,7 @@ class Poker_Hand {
     public function generateImagePaths() {
         $this->imagePaths = [];
         foreach ($this->cards as $card) {
-            if (!isset($this->suitMap[$card['suit']])) {
-                continue; // 想定外スートはスキップ
-            }
+            if (!isset($this->suitMap[$card['suit']])) continue;
             $suitKey = $this->suitMap[$card['suit']];
             $numKey  = 'number' . $card['number'];
             $this->imagePaths[] = "images/{$suitKey}_{$numKey}.png";
@@ -107,11 +100,18 @@ class Poker_Hand {
 }
 
 // =========================
-// 実行部分
-// =========================
-
-// 例：POSTで cards[0][suit]=hearts, cards[0][number]=10 など送られる想定
-$cards = $_POST['cards'] ?? [];
+// フォームデータの変換（HTMLはそのまま）
+$cards = [];
+for ($i = 1; $i <= 5; $i++) {
+    $suitKey   = 'suit' . $i;
+    $numberKey = 'number' . $i;
+    if (!empty($_POST[$suitKey]) && !empty($_POST[$numberKey])) {
+        $cards[] = [
+            'suit'   => $_POST[$suitKey],
+            'number' => intval($_POST[$numberKey])
+        ];
+    }
+}
 
 $hand = new Poker_Hand($cards);
 $hand->judgeHand();
@@ -121,4 +121,3 @@ echo "<h2>判定結果: {$hand->getJudge()}</h2>";
 
 foreach ($hand->getImagePaths() as $img) {
     echo "<img src='{$img}' alt='card' style='width:80px;margin:5px;'>";
-}
