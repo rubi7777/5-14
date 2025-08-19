@@ -4,7 +4,6 @@ class Poker_Hand {
     private $judge = '';
     private $imagePaths = [];
 
-    // スート変換表（画像用）
     private $suitMap = [
         'hearts'   => 'suit1',
         'diamonds' => 'suit2',
@@ -12,17 +11,25 @@ class Poker_Hand {
         'spades'   => 'suit4'
     ];
 
-    public function __construct($cards) {
-        $this->cards = $cards;
+    public function __construct(array $cards) {
+        // 入力正規化：suitは小文字・trim、numberは整数化
+        $this->cards = array_map(function($c){
+            return [
+                'suit'   => strtolower(trim($c['suit'] ?? '')),
+                'number' => intval($c['number'] ?? 0),
+            ];
+        }, $cards);
     }
 
     public function judgeHand() {
-        // 不正判定チェック
+        // 枚数チェック
         if (count($this->cards) !== 5) {
             $this->judge = '不正判定 (Illegal hand)';
             return;
         }
-        if (count($this->cards) !== count(array_unique(array_map(fn($c) => $c['suit'] . $c['number'], $this->cards)))) {
+        // 同一カード重複チェック
+        $dupKey = array_map(fn($c) => $c['suit'].'-'.$c['number'], $this->cards);
+        if (count($dupKey) !== count(array_unique($dupKey))) {
             $this->judge = '不正判定 (Illegal hand)';
             return;
         }
@@ -30,44 +37,50 @@ class Poker_Hand {
         $numbers = array_column($this->cards, 'number');
         $suits   = array_column($this->cards, 'suit');
 
-        sort($numbers);
-        $isFlush = count(array_unique($suits)) === 1;
+        sort($numbers, SORT_NUMERIC);
+        $isFlush    = count(array_unique($suits)) === 1;
         $isStraight = $this->isSequential($numbers);
 
         // Aを14として再判定
         $numbersAceHigh = array_map(fn($n) => $n === 1 ? 14 : $n, $numbers);
-        sort($numbersAceHigh);
+        sort($numbersAceHigh, SORT_NUMERIC);
         $isStraightAceHigh = $this->isSequential($numbersAceHigh);
 
-        // 同じ数字の枚数をカウント
-        $counts = array_count_values($numbers);
-        rsort($counts);
+        // A-2-3-4-5 (ホイール)
+        $isWheel = ($numbers === [1,2,3,4,5]);
+
+        // 同じ数字の枚数
+        $countMap = array_count_values($numbers);
+        $counts   = array_values($countMap);
+        rsort($counts, SORT_NUMERIC);
+        $maxCnt     = $counts[0] ?? 0;
+        $secondCnt  = $counts[1] ?? 0;
 
         // 役判定
-        if ($isFlush && $isStraightAceHigh && $numbersAceHigh === [10, 11, 12, 13, 14]) {
+        if ($isFlush && $isStraightAceHigh && $numbersAceHigh === [10,11,12,13,14]) {
             $this->judge = 'ロイヤルストレートフラッシュ (Royal Straight Flush)';
-        } elseif ($isFlush && ($isStraight || $isStraightAceHigh)) {
+        } elseif ($isFlush && ($isStraight || $isStraightAceHigh || $isWheel)) {
             $this->judge = 'ストレートフラッシュ (Straight Flush)';
-        } elseif ($counts[0] === 4) {
+        } elseif ($maxCnt === 4) {
             $this->judge = 'フォーカード (Four Card)';
-        } elseif ($counts[0] === 3 && $counts[1] === 2) {
+        } elseif ($maxCnt === 3 && $secondCnt === 2) {
             $this->judge = 'フルハウス (Full House)';
         } elseif ($isFlush) {
             $this->judge = 'フラッシュ (Flush)';
-        } elseif ($isStraight || $isStraightAceHigh) {
+        } elseif ($isStraight || $isStraightAceHigh || $isWheel) {
             $this->judge = 'ストレート (Straight)';
-        } elseif ($counts[0] === 3) {
+        } elseif ($maxCnt === 3) {
             $this->judge = 'スリーカード (Three Card)';
-        } elseif ($counts[0] === 2 && $counts[1] === 2) {
+        } elseif ($maxCnt === 2 && $secondCnt === 2) {
             $this->judge = 'ツーペア (Two Pair)';
-        } elseif ($counts[0] === 2) {
+        } elseif ($maxCnt === 2) {
             $this->judge = 'ワンペア (One Pair)';
         } else {
             $this->judge = '役なし (None)';
         }
     }
 
-    private function isSequential($numbers) {
+    private function isSequential(array $numbers): bool {
         for ($i = 0; $i < count($numbers) - 1; $i++) {
             if ($numbers[$i] + 1 !== $numbers[$i + 1]) {
                 return false;
@@ -76,67 +89,36 @@ class Poker_Hand {
         return true;
     }
 
-    // 画像パス生成
     public function generateImagePaths() {
         $this->imagePaths = [];
         foreach ($this->cards as $card) {
+            if (!isset($this->suitMap[$card['suit']])) {
+                continue; // 想定外スートはスキップ
+            }
             $suitKey = $this->suitMap[$card['suit']];
-            $numKey = 'number' . $card['number'];
+            $numKey  = 'number' . $card['number'];
             $this->imagePaths[] = "images/{$suitKey}_{$numKey}.png";
         }
     }
 
-    public function getCards() {
-        return $this->cards;
-    }
-
-    public function getJudge() {
-        return $this->judge;
-    }
-
-    public function getImagePaths() {
-        return $this->imagePaths;
-    }
+    public function getCards()      { return $this->cards; }
+    public function getJudge()      { return $this->judge; }
+    public function getImagePaths() { return $this->imagePaths; }
 }
 
-// ========== メイン処理 ==========
+// =========================
+// 実行部分
+// =========================
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // JSONで送信された場合に対応
-    $raw = file_get_contents("php://input");
-    $json = json_decode($raw, true);
+// 例：POSTで cards[0][suit]=hearts, cards[0][number]=10 など送られる想定
+$cards = $_POST['cards'] ?? [];
 
-    if (is_array($json) && isset($json['cards'])) {
-        $cards = $json['cards'];
-    } else {
-        $cards = $_POST['cards'] ?? [];
-    }
+$hand = new Poker_Hand($cards);
+$hand->judgeHand();
+$hand->generateImagePaths();
 
-    // データが空ならランダム配布
-    if (empty($cards)) {
-        $suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-        $numbers = range(1, 13); // 1=A, 11=J, 12=Q, 13=K
-        $deck = [];
-        foreach ($suits as $suit) {
-            foreach ($numbers as $number) {
-                $deck[] = ['number' => $number, 'suit' => $suit];
-            }
-        }
-        shuffle($deck);
-        $cards = array_slice($deck, 0, 5);
-    }
+echo "<h2>判定結果: {$hand->getJudge()}</h2>";
 
-    // 判定
-    $poker = new Poker_Hand($cards);
-    $poker->judgeHand();
-    $poker->generateImagePaths();
-
-    // JSONで返却
-    header("Content-Type: application/json; charset=utf-8");
-    echo json_encode([
-        "judge" => $poker->getJudge(),
-        "cards" => $poker->getCards(),
-        "images" => $poker->getImagePaths()
-    ]);
-    exit;
+foreach ($hand->getImagePaths() as $img) {
+    echo "<img src='{$img}' alt='card' style='width:80px;margin:5px;'>";
 }
