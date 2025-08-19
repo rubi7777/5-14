@@ -1,3 +1,31 @@
+<?php
+require_once 'poker.php'; // クラスと処理を読み込む
+
+$cards = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // フォームから送信されたカード情報を収集
+    for ($i = 1; $i <= 5; $i++) {
+        $suitKey   = 'suit' . $i;
+        $numberKey = 'number' . $i;
+        if (!empty($_POST[$suitKey]) && !empty($_POST[$numberKey])) {
+            $cards[] = [
+                'suit'   => $_POST[$suitKey],
+                'number' => intval($_POST[$numberKey])
+            ];
+        }
+    }
+    $hand = new Poker_Hand($cards);
+    $hand->judgeHand();
+    $hand->generateImagePaths();
+}
+?>
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html data-wf-page="65a6358f98ae25d9e60af7b3" data-wf-site="65a6257c9b4dab4f4c5b2ebc">
 <head>

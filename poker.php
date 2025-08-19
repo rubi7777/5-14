@@ -118,10 +118,3 @@ for ($i = 1; $i <= 5; $i++) {
 $hand = new Poker_Hand($cards);
 $hand->judgeHand();
 $hand->generateImagePaths();
-
-// 結果表示
-echo "<h2>判定結果: {$hand->getJudge()}</h2>";
-
-foreach ($hand->getImagePaths() as $img) {
-    echo "<img src='{$img}' alt='card' style='width:80px;margin:5px;'>";
-}
