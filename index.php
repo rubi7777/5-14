@@ -1,9 +1,9 @@
 <?php
-require_once 'poker.php'; // クラスと処理を読み込む
+require_once 'poker.php'; // クラス定義だけ読み込む
 
-$cards = [];
+$hand = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // フォームから送信されたカード情報を収集
+    $cards = [];
     for ($i = 1; $i <= 5; $i++) {
         $suitKey   = 'suit' . $i;
         $numberKey = 'number' . $i;
@@ -14,17 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         }
     }
-    $hand = new Poker_Hand($cards);
-    $hand->judgeHand();
-    $hand->generateImagePaths();
+    if ($cards) {
+        $hand = new Poker_Hand($cards);
+        $hand->judgeHand();
+        $hand->generateImagePaths();
+    }
 }
 ?>
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html data-wf-page="65a6358f98ae25d9e60af7b3" data-wf-site="65a6257c9b4dab4f4c5b2ebc">
@@ -32,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Pocker Program</title>
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta content="Webflow" name="generator">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/stylesheet.css" rel="stylesheet" type="text/css">
   <link href="css/poker-game-sample.css" rel="stylesheet" type="text/css">
@@ -40,49 +35,126 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="w-form">
-    <form id="email-form" action="index.php" name="email-form" data-name="Email Form" method="post" class="form-2">
+    <form id="email-form" action="index.php" method="post" class="form-2">
       <div class="w-layout-blockcontainer container-2 w-container">
 
-        <?php for ($i=1; $i<=5; $i++): ?>
-        <div class="w-layout-blockcontainer container w-container">
-          <label for="suit<?= $i ?>" class="field-label">CARD <?= $i ?></label>
-          <select id="suit<?= $i ?>" name="suit<?= $i ?>" class="suit-<?= $i ?> w-select">
-            <option value=""></option>
-            <option value="spade" <?= ($_POST['suit'.$i] ?? '')==='spade'?'selected':'' ?>>spade</option>
-            <option value="heart" <?= ($_POST['suit'.$i] ?? '')==='heart'?'selected':'' ?>>heart</option>
-            <option value="diamond" <?= ($_POST['suit'.$i] ?? '')==='diamond'?'selected':'' ?>>diamond</option>
-            <option value="club" <?= ($_POST['suit'.$i] ?? '')==='club'?'selected':'' ?>>club</option>
-          </select>
-          <select id="number<?= $i ?>" name="number<?= $i ?>" class="number<?= $i ?> w-select">
-            <option value=""></option>
-            <?php for ($n=1; $n<=13; $n++): ?>
-              <option value="<?= $n ?>" <?= (intval($_POST['number'.$i] ?? 0)==$n)?'selected':'' ?>><?= $n ?></option>
-            <?php endfor; ?>
-          </select>
+        <!-- CARD 1 -->
+        <div class="w-layout-blockcontainer container-3 w-container">
+          <label for="" class="field-label">CARD 1</label>
+          <div class="w-layout-blockcontainer container w-container">
+            <select id="suit1" name="suit1" class="suit-1 w-select">
+              <option value=""></option>
+              <option value="spade">spade</option>
+              <option value="heart">heart</option>
+              <option value="diamond">diamond</option>
+              <option value="club">club</option>
+            </select>
+            <select id="number1" name="number1" class="number1 w-select">
+              <option value=""></option>
+              <?php for ($n=1; $n<=13; $n++): ?>
+                <option value="<?= $n ?>"><?= $n ?></option>
+              <?php endfor; ?>
+            </select>
+          </div>
         </div>
-        <?php endfor; ?>
+
+        <!-- CARD 2 -->
+        <div class="w-layout-blockcontainer container-4 w-container">
+          <label for="" class="field-label-2">CARD 2</label>
+          <div class="w-layout-blockcontainer container w-container">
+            <select id="suit2" name="suit2" class="suit-2 w-select">
+              <option value=""></option>
+              <option value="spade">spade</option>
+              <option value="heart">heart</option>
+              <option value="diamond">diamond</option>
+              <option value="club">club</option>
+            </select>
+            <select id="number2" name="number2" class="number2 w-select">
+              <option value=""></option>
+              <?php for ($n=1; $n<=13; $n++): ?>
+                <option value="<?= $n ?>"><?= $n ?></option>
+              <?php endfor; ?>
+            </select>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="w-layout-blockcontainer container-5 w-container">
+          <label for="" class="field-label-3">CARD 3</label>
+          <div class="w-layout-blockcontainer container w-container">
+            <select id="suit3" name="suit3" class="suit-3 w-select">
+              <option value=""></option>
+              <option value="spade">spade</option>
+              <option value="heart">heart</option>
+              <option value="diamond">diamond</option>
+              <option value="club">club</option>
+            </select>
+            <select id="number3" name="number3" class="number3 w-select">
+              <option value=""></option>
+              <?php for ($n=1; $n<=13; $n++): ?>
+                <option value="<?= $n ?>"><?= $n ?></option>
+              <?php endfor; ?>
+            </select>
+          </div>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="w-layout-blockcontainer container-6 w-container">
+          <label for="" class="field-label-4">CARD 4</label>
+          <div class="w-layout-blockcontainer container w-container">
+            <select id="suit4" name="suit4" class="suit-4 w-select">
+              <option value=""></option>
+              <option value="spade">spade</option>
+              <option value="heart">heart</option>
+              <option value="diamond">diamond</option>
+              <option value="club">club</option>
+            </select>
+            <select id="number4" name="number4" class="number4 w-select">
+              <option value=""></option>
+              <?php for ($n=1; $n<=13; $n++): ?>
+                <option value="<?= $n ?>"><?= $n ?></option>
+              <?php endfor; ?>
+            </select>
+          </div>
+        </div>
+
+        <!-- CARD 5 -->
+        <div class="w-layout-blockcontainer w-container">
+          <label for="" class="field-label-5">CARD 5</label>
+          <div class="w-layout-blockcontainer container w-container">
+            <select id="suit5" name="suit5" class="suit-5 w-select">
+              <option value=""></option>
+              <option value="spade">spade</option>
+              <option value="heart">heart</option>
+              <option value="diamond">diamond</option>
+              <option value="club">club</option>
+            </select>
+            <select id="number5" name="number5" class="number5 w-select">
+              <option value=""></option>
+              <?php for ($n=1; $n<=13; $n++): ?>
+                <option value="<?= $n ?>"><?= $n ?></option>
+              <?php endfor; ?>
+            </select>
+          </div>
+        </div>
 
       </div>
       <button type="submit" class="button w-button">SEND</button>
     </form>
   </div>
 
-  <section>
-    <h1 class="heading-2">hand of cards：</h1>
-    <div class="w-layout-grid grid">
-      <?php
-        if (!empty($hand)) {
-          foreach ($hand->getImagePaths() as $img) {
-            echo "<img src='{$img}' alt='card' style='width:80px;margin:5px;'>";
-          }
-        }
-      ?>
-    </div>
-  </section>
-
-  <h1 class="heading-3">
-    <strong>A poker hand→</strong>
-    <?php if(!empty($hand)) echo $hand->getJudge(); ?>
-  </h1>
+  <?php if ($hand): ?>
+    <section>
+      <h1 class="heading-2">hand of cards：</h1>
+      <div class="w-layout-grid grid">
+        <?php foreach ($hand->getImagePaths() as $path): ?>
+          <img src="<?= htmlspecialchars($path) ?>" loading="lazy" alt="">
+        <?php endforeach; ?>
+      </div>
+    </section>
+    <h1 class="heading-3">
+      <strong>A poker hand→</strong><?= htmlspecialchars($hand->getJudge()) ?>
+    </h1>
+  <?php endif; ?>
 </body>
 </html>

@@ -101,20 +101,3 @@ class Poker_Hand {
     public function getImagePaths() { return $this->imagePaths; }
 }
 
-// =========================
-// フォームデータの変換
-$cards = [];
-for ($i = 1; $i <= 5; $i++) {
-    $suitKey   = 'suit' . $i;
-    $numberKey = 'number' . $i;
-    if (!empty($_POST[$suitKey]) && !empty($_POST[$numberKey])) {
-        $cards[] = [
-            'suit'   => $_POST[$suitKey],
-            'number' => intval($_POST[$numberKey])
-        ];
-    }
-}
-
-$hand = new Poker_Hand($cards);
-$hand->judgeHand();
-$hand->generateImagePaths();
