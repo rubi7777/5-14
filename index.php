@@ -19,6 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hand->judgeHand();
         $hand->generateImagePaths();
     }
+} else {
+    // デフォルトはスペード1〜5
+    $defaultCards = [];
+    for ($i = 1; $i <= 5; $i++) {
+        $defaultCards[] = ['suit' => 'spade', 'number' => $i];
+    }
+    $hand = new Poker_Hand($defaultCards);
+    $hand->judgeHand();
+    $hand->generateImagePaths();
 }
 ?>
 

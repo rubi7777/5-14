@@ -12,6 +12,14 @@ class Poker_Hand {
         'club'    => 'club'
     ];
 
+
+ public function setJudge($msg) {
+        $this->judge = $msg;
+    }
+
+
+
+
     public function __construct(array $cards) {
         // 入力正規化：suitは小文字・trim、numberは整数化
         $this->cards = array_map(function($c){
